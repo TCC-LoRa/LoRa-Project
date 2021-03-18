@@ -1,33 +1,9 @@
-/*
-  This is a simple example show the Heltec.LoRa sended data in OLED.
-
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
-
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-  
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  https://heltec.org
-  
-  this project also realess in GitHub:
-  https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
-*/
-
 #include "heltec.h"
 #include "images.h"
 
-#define BAND 868E6 //you can set band here directly,e.g. 868E6,915E6
+#define BAND 433E6 //you can set band here directly,e.g. 868E6,915E6
 
-unsigned int counter = 0;
-String rssi = "RSSI --";
-String packSize = "--";
-String packet;
-
+unsigned int id = 0;
 void logo()
 {
   Heltec.display->clear();
@@ -49,6 +25,7 @@ void setup()
 
   Heltec.display->drawString(0, 0, "LoRa Iniciado com sucesso!");
   Heltec.display->display();
+  LoRa.setSyncWord(0xF3);
   delay(1000);
 }
 
@@ -59,7 +36,7 @@ void loop()
   Heltec.display->setFont(ArialMT_Plain_10);
 
   Heltec.display->drawString(0, 0, "Enviando pacote: ");
-  Heltec.display->drawString(90, 0, String(counter));
+  Heltec.display->drawString(90, 0, String(id));
   Heltec.display->display();
 
   // send packet
@@ -73,11 +50,11 @@ void loop()
  *   - RF_PACONFIG_PASELECT_RFO     -- LoRa single output via RFO_HF / RFO_LF, maximum output 14dBm
 */
   LoRa.setTxPower(20, RF_PACONFIG_PASELECT_PABOOST); //20dB output must via PABOOST
-  LoRa.print("hello ");
-  LoRa.print(counter);
+  LoRa.print(id);
+
   LoRa.endPacket();
 
-  counter++;
+  id++;
   digitalWrite(LED, HIGH); // turn the LED on (HIGH is the voltage level)
   delay(1000);             // wait for a second
   digitalWrite(LED, LOW);  // turn the LED off by making the voltage LOW

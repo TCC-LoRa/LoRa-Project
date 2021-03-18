@@ -1,26 +1,7 @@
-/*
-  This is a simple example show the Heltec.LoRa recived data in OLED.
-
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
-
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-  
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  www.heltec.cn
-  
-  this project also realess in GitHub:
-  https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
-*/
 #include "heltec.h"
 #include "images.h"
 
-#define BAND 868E6 //you can set band here directly,e.g. 868E6,915E6
+#define BAND 433E6 //you can set band here directly,e.g. 868E6,915E6
 String rssi = "RSSI --";
 String packSize = "--";
 String packet;
@@ -72,6 +53,7 @@ void setup()
   Heltec.display->display();
   delay(1000);
   //LoRa.onReceive(cbk);
+  LoRa.setSyncWord(0xF3);
   LoRa.receive();
 }
 
